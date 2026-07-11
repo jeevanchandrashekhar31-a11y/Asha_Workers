@@ -1,0 +1,35 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # STUB: Add Google Auth step here using Workload Identity Federation
+      # - id: auth
+      #   uses: google-github-actions/auth@v2
+      #   with:
+      #     workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+      #     service_account: 'my-service-account@my-project.iam.gserviceaccount.com'
+
+      # STUB: Setup gcloud CLI
+      # - name: Set up Cloud SDK
+      #   uses: google-github-actions/setup-gcloud@v2
+
+      # STUB: Build and push to Artifact Registry, then deploy to Cloud Run
+      # - name: Build and Deploy
+      #   run: |
+      #     gcloud builds submit --tag gcr.io/${{ env.PROJECT_ID }}/field-agent
+      #     gcloud run deploy field-agent --image gcr.io/${{ env.PROJECT_ID }}/field-agent --region us-central1 --allow-unauthenticated

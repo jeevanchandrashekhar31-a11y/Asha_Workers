@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Field Agent - Hackathon Demo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎙️ Field Agent</h1>
+      <p>Voice-first logging for health workers</p>
+    </header>
+
+    <main>
+      <div class="controls">
+        <select id="visitType">
+          <option value="general">General Visit</option>
+          <option value="antenatal_checkup">Antenatal Checkup</option>
+          <option value="immunization_visit">Immunization Visit</option>
+        </select>
+        
+        <button id="recordBtn" class="btn primary">Start Recording</button>
+      </div>
+
+      <div id="status" class="status">Ready</div>
+
+      <div id="results" class="results hidden">
+        <h2>Results</h2>
+        <pre id="jsonOutput"></pre>
+      </div>
+
+      <div id="visitHistory" class="visit-history">
+        <h2>Visit History</h2>
+        <div id="historyList"></div>
+      </div>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
