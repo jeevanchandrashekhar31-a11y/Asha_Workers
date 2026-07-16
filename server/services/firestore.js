@@ -1,31 +1,43 @@
-import fs from 'fs';
-import path from 'path';
+import { PrismaClient } from '@prisma/client';
 
-const DB_FILE = path.join(process.cwd(), 'local-db.json');
+const prisma = new PrismaClient();
 
-function readDB() {
-  if (!fs.existsSync(DB_FILE)) {
-    fs.writeFileSync(DB_FILE, JSON.stringify({ visits: [] }, null, 2));
-  }
-  return JSON.parse(fs.readFileSync(DB_FILE, 'utf-8'));
-}
-
-function writeDB(data) {
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
-}
-
-console.log("Using local JSON file storage (local-db.json) — Firestore bypassed for now.");
+console.log("Using Prisma with Postgres — local JSON bypassed.");
 
 export async function saveVisitData(data) {
-  const db = readDB();
   const id = "visit_" + Date.now();
-  const record = { id, ...data, timestamp: new Date().toISOString() };
-  db.visits.unshift(record);
-  writeDB(db);
-  return { id };
+  
+  const record = await prisma.visit.create({
+    data: {
+      id,
+      transcript: data.transcript || "",
+      visit_type: data.visit_type || data.visitType || "",
+      extracted_fields: data.extracted_fields || {},
+      status: data.status || "incomplete",
+      missing_fields: data.missing_fields || [],
+      specificityScore: data.specificityScore ?? null,
+      timestamp: new Date()
+    }
+  });
+
+  return { id: record.id };
 }
 
 export async function getVisits() {
-  const db = readDB();
-  return db.visits.slice(0, 10);
+  const visits = await prisma.visit.findMany({
+    take: 10,
+    orderBy: {
+      timestamp: 'desc'
+    }
+  });
+  return visits.map(v => ({ ...v, timestamp: v.timestamp.toISOString() }));
+}
+
+export async function getAllVisits() {
+  const visits = await prisma.visit.findMany({
+    orderBy: {
+      timestamp: 'desc'
+    }
+  });
+  return visits.map(v => ({ ...v, timestamp: v.timestamp.toISOString() }));
 }

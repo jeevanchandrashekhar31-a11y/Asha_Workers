@@ -3,37 +3,97 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Field Agent - Hackathon Demo</title>
+  <title>Field Agent - ASHA Worker Tool</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>🎙️ Field Agent</h1>
-      <p>Voice-first logging for health workers</p>
-    </header>
+  <div class="app-wrapper">
+    <aside class="sidebar">
+      <header>
+        <h1 style="display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+          Field Agent
+        </h1>
+        <p>Voice-first logging for health workers</p>
+      </header>
+      
+      <nav class="tabs">
+        <a href="#/log" class="tab-btn active" data-tab="tab-log">
+          <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg></span>
+          <span class="nav-label">Log Visit</span>
+        </a>
+        <a href="#/history" class="tab-btn" data-tab="tab-history">
+          <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg></span>
+          <span class="nav-label">Visit History</span>
+        </a>
+        <a href="#/supervisor" class="tab-btn" data-tab="tab-supervisor">
+          <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg></span>
+          <span class="nav-label">Supervisor Digest</span>
+        </a>
+        <a href="#/phc" class="tab-btn" data-tab="tab-phc">
+          <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></span>
+          <span class="nav-label">PHC Zone Digest</span>
+        </a>
+      </nav>
+    </aside>
 
-    <main>
-      <div class="controls">
-        <select id="visitType">
-          <option value="general">General Visit</option>
-          <option value="antenatal_checkup">Antenatal Checkup</option>
-          <option value="immunization_visit">Immunization Visit</option>
-        </select>
-        
-        <button id="recordBtn" class="btn primary">Start Recording</button>
+    <main class="main-content">
+      <!-- TAB: LOG VISIT -->
+      <div id="tab-log" class="tab-content active">
+        <div class="visit-card">
+          <div class="controls" style="margin-bottom: 0;">
+            <select id="visitType">
+              <option value="general_visit">General Visit</option>
+              <option value="antenatal_checkup">Antenatal Checkup</option>
+              <option value="immunization_visit">Immunization Visit</option>
+            </select>
+            
+            <button id="recordBtn" class="btn primary">Start Recording</button>
+          </div>
+        </div>
+
+        <div id="status" class="status">Ready</div>
+
+        <!-- Clean confirmation UI -->
+        <div id="successCard" class="success-card" style="display: none;">
+          <div class="success-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+          <div class="success-title">Visit logged successfully</div>
+          <div id="successDetails" class="success-details"></div>
+        </div>
       </div>
 
-      <div id="status" class="status">Ready</div>
-
-      <div id="results" class="results hidden">
-        <h2>Results</h2>
-        <pre id="jsonOutput"></pre>
+      <!-- TAB: VISIT HISTORY -->
+      <div id="tab-history" class="tab-content">
+        <div id="anomalyContainerPlaceholder"></div>
+        <div id="visitHistory" class="visit-history">
+          <h2>Visit History</h2>
+          <div id="historyList"></div>
+        </div>
       </div>
 
-      <div id="visitHistory" class="visit-history">
-        <h2>Visit History</h2>
-        <div id="historyList"></div>
+      <!-- TAB: SUPERVISOR DIGEST -->
+      <div id="tab-supervisor" class="tab-content">
+        <div class="visit-card">
+          <div class="visit-header" style="align-items: center; margin-bottom: 0;">
+            <h3 class="visit-title" style="margin: 0;">Supervisor Digest</h3>
+            <button id="supervisorRefreshBtn" class="btn primary" style="padding: 0.5rem 1.25rem; font-size: 0.95rem;">Refresh</button>
+          </div>
+          <div id="supervisorStatus" class="status" style="display: none; margin-top: 1.5rem;">Loading...</div>
+          <div id="supervisorContent" class="visit-transcript" style="display: none; white-space: pre-wrap;"></div>
+        </div>
+      </div>
+
+      <!-- TAB: PHC ZONE DIGEST -->
+      <div id="tab-phc" class="tab-content">
+        <div class="visit-card">
+          <div class="visit-header" style="align-items: center; margin-bottom: 0;">
+            <h3 class="visit-title" style="margin: 0;">PHC Zone Digest</h3>
+            <button id="phcRefreshBtn" class="btn primary" style="padding: 0.5rem 1.25rem; font-size: 0.95rem;">Refresh</button>
+          </div>
+          <div id="phcStatus" class="status" style="display: none; margin-top: 1.5rem;">Loading...</div>
+          <div id="phcContent" class="visit-transcript" style="display: none; white-space: pre-wrap;"></div>
+        </div>
       </div>
     </main>
   </div>

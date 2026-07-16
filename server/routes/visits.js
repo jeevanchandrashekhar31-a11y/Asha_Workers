@@ -26,6 +26,8 @@ router.post('/audio', upload.single('audio'), async (req, res, next) => {
       return res.status(400).json({ success: false, error: "No audio file provided." });
     }
 
+    console.log(`Received audio file size: ${audioFile.size} bytes (${(audioFile.size / 1024).toFixed(2)} KB)`);
+
     if (audioFile.size < 5000) {
       return res.status(400).json({ success: false, error: "Audio too short or empty — please record a longer message." });
     }

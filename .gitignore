@@ -3,3 +3,5 @@ node_modules
 .DS_Store
 service-account-key.json
 local-db.json
+
+/generated/prisma
