@@ -27,7 +27,7 @@ router.get('/', async (req, res) => {
 
     const prompt = `Here is visit data grouped by zone in JSON: ${JSON.stringify(aggregated)}. Produce a short, direct, 1-2 sentence plain-language summary for a PHC official. Highlight any zones with notably low visit counts or high incomplete rates relative to others. Keep the tone professional, concise, and do not use any emojis.`;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
     const result = await model.generateContent(prompt);
     const responseText = result.response.text();
 
