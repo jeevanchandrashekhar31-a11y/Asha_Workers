@@ -36,7 +36,7 @@ Respond with ONLY valid JSON in this exact structure, no markdown formatting, no
 }`;
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash"  });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro"  });
 
     const audioPart = {
       inlineData: {
