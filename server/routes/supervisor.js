@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
 
     const prompt = `Here is an anomaly report in JSON: ${JSON.stringify(anomalies)}. Produce a short, direct, 1-2 sentence plain-language digest for a PHC supervisor. Flag counts by rule type, do not repeat the raw JSON. Keep the tone professional, concise, and do not use any emojis.`;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite" });
     const result = await model.generateContent(prompt);
     const responseText = result.response.text();
 
